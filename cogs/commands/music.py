@@ -14,6 +14,8 @@ import yt_dlp as youtube_dl
 from async_timeout import timeout
 from discord.ext import commands
 
+from function import checkBotState, Close
+
 # Silence useless bug reports messages
 youtube_dl.utils.bug_reports_message = lambda: ""
 
@@ -290,10 +292,12 @@ class Music(commands.Cog):
 
     @commands.group(pass_context=True, aliases=["m"])
     async def music(self, ctx):
+        if not checkBotState(): await Close(ctx); return
         pass
 
     @music.command(name="join", invoke_without_subcommand=True, pass_context=True, aliases=["j"])
     async def _join(self, ctx: commands.Context):
+        if not checkBotState(): await Close(ctx); return
 
         destination = ctx.author.voice.channel
         if ctx.voice_state.voice:
@@ -305,6 +309,7 @@ class Music(commands.Cog):
     @music.command(name="summon", pass_context=True, aliases=["s"])
     @commands.has_permissions(manage_guild=True)
     async def _summon(self, ctx: commands.Context, *, channel: discord.VoiceChannel = None):
+        if not checkBotState(): await Close(ctx); return
 
         if not channel and not ctx.author.voice:
             raise VoiceError("You are neither connected to a voice channel nor specified a channel to join.")
@@ -319,6 +324,7 @@ class Music(commands.Cog):
     @music.command(name="leave", aliases=["disconnect", "l"], pass_context=True)
     @commands.has_permissions(manage_guild=True)
     async def _leave(self, ctx: commands.Context):
+        if not checkBotState(): await Close(ctx); return
 
         if not ctx.voice_state.voice:
             return await ctx.send("Not connected to any voice channel.")
@@ -342,12 +348,14 @@ class Music(commands.Cog):
 
     @music.command(name="now", aliases=["current", "playing", "n"], pass_context=True)
     async def _now(self, ctx: commands.Context):
+        if not checkBotState(): await Close(ctx); return
 
         await ctx.send(embed=ctx.voice_state.current.create_embed())
 
     @music.command(name="pause", pass_context=True)
     @commands.has_permissions(manage_guild=True)
     async def _pause(self, ctx: commands.Context):
+        if not checkBotState(): await Close(ctx); return
 
         if not ctx.voice_state.is_playing and ctx.voice_state.voice.is_playing():
             ctx.voice_state.voice.pause()
@@ -356,6 +364,7 @@ class Music(commands.Cog):
     @music.command(name="resume", pass_context=True, aliases=["r"])
     @commands.has_permissions(manage_guild=True)
     async def _resume(self, ctx: commands.Context):
+        if not checkBotState(): await Close(ctx); return
 
         if not ctx.voice_state.is_playing and ctx.voice_state.voice.is_paused():
             ctx.voice_state.voice.resume()
@@ -364,6 +373,7 @@ class Music(commands.Cog):
     @music.command(name="stop", pass_context=True, aliases=["st"])
     @commands.has_permissions(manage_guild=True)
     async def _stop(self, ctx: commands.Context):
+        if not checkBotState(): await Close(ctx); return
 
         ctx.voice_state.songs.clear()
 
@@ -373,6 +383,7 @@ class Music(commands.Cog):
 
     @music.command(name="skip", pass_context=True, aliases=["sp"])
     async def _skip(self, ctx: commands.Context):
+        if not checkBotState(): await Close(ctx); return
 
         if not ctx.voice_state.is_playing:
             return await ctx.send("Not playing any music right now...")
@@ -397,6 +408,7 @@ class Music(commands.Cog):
 
     @music.command(name="queue", pass_context=True, aliases=["q"])
     async def _queue(self, ctx: commands.Context, *, page: int = 1):
+        if not checkBotState(): await Close(ctx); return
         if len(ctx.voice_state.songs) == 0:
             return await ctx.send("Empty queue.")
 
@@ -427,6 +439,7 @@ class Music(commands.Cog):
 
     @music.command(name="remove", pass_context=True, aliases=["rm"])
     async def _remove(self, ctx: commands.Context, index: int):
+        if not checkBotState(): await Close(ctx); return
 
         if len(ctx.voice_state.songs) == 0:
             return await ctx.send("Empty queue.")
@@ -436,6 +449,7 @@ class Music(commands.Cog):
 
     @music.command(name="loop", pass_context=True)
     async def _loop(self, ctx: commands.Context):
+        if not checkBotState(): await Close(ctx); return
         if not ctx.voice_state.is_playing:
             return await ctx.send("Nothing being played at the moment.")
 
@@ -444,6 +458,7 @@ class Music(commands.Cog):
 
     @music.command(name="play", pass_context=True, aliases=["p"])
     async def _play(self, ctx: commands.Context, *, search: str):
+        if not checkBotState(): await Close(ctx); return
 
         if not ctx.voice_state.voice:
             await ctx.invoke(self._join)
