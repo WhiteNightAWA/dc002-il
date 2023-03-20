@@ -457,7 +457,7 @@ class Music(commands.Cog):
         await ctx.message.add_reaction("✅")
 
     @commands.command(name="loop")
-    async def _loop(self, ctx: commands.Context):
+    async def loop(self, ctx: commands.Context):
         if not checkBotState(): await Close(ctx); return
         if not ctx.voice_state.is_playing:
             return await ctx.send("Nothing being played at the moment.")
@@ -466,7 +466,7 @@ class Music(commands.Cog):
         await ctx.message.add_reaction("✅")
 
     @commands.command(name="play", aliases=["p"])
-    async def _play(self, ctx: commands.Context, *, search: str):
+    async def play(self, ctx: commands.Context, *, search: str):
         if not checkBotState(): await Close(ctx); return
 
         if not ctx.voice_state.voice:

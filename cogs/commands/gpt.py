@@ -2,6 +2,8 @@ import asyncio
 
 import discord
 import os
+
+from async_timeout import timeout
 from discord.ext import commands
 
 from cogs.core import Core
@@ -13,7 +15,8 @@ isPrivate = False
 
 async def send_message(message, user_message):
     try:
-        await asyncio.wait_for(send_message_gpt(message, user_message), timeout=10.0)
+        async with timeout(20):
+            await send_message_gpt(message, user_message)
     except TimeoutError:
         await message.reply("> **Error: Something went wrong, please try again later!**")
 
@@ -241,7 +244,7 @@ class GPT(Core):
     async def on_message(self, message):
         isReplyAll = os.getenv("REPLYING_ALL")
         if isReplyAll == "True" and message.channel.id == int(
-                os.getenv("REPLYING_ALL_DISCORD_CHANNEL_ID")) and not message.content.startswith("b."):
+                os.getenv("REPLYING_ALL_DISCORD_CHANNEL_ID")) and not message.content.startswith("c."):
             if message.author.bot:
                 return
 
