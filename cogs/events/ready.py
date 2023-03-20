@@ -11,6 +11,5 @@ class Ready(Core):
         print(f"Logged in as {self.bot.user}")
 
 
-
 async def setup(bot):
     await bot.add_cog(Ready(bot))
