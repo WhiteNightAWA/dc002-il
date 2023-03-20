@@ -434,16 +434,13 @@ class Music(commands.Cog):
         ctx.voice_state.songs.remove(index - 1)
         await ctx.message.add_reaction("✅")
 
-    """ Loop
-        @commands.command(name="loop")
-        async def _loop(self, ctx: commands.Context):
-            if not ctx.voice_state.is_playing:
-                return await ctx.send("Nothing being played at the moment.")
+    @music.command(name="loop", pass_context=True)
+    async def _loop(self, ctx: commands.Context):
+        if not ctx.voice_state.is_playing:
+            return await ctx.send("Nothing being played at the moment.")
 
-            # Inverse boolean value to loop and unloop.
-            ctx.voice_state.loop = not ctx.voice_state.loop
-            await ctx.message.add_reaction("✅")
-    """
+        ctx.voice_state.loop = not ctx.voice_state.loop
+        await ctx.message.add_reaction("✅")
 
     @music.command(name="play", pass_context=True, aliases=["p"])
     async def _play(self, ctx: commands.Context, *, search: str):
